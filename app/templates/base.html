@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}--TechBlog--{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- AOS Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #0d6efd !important;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            border-radius: 12px;
+        }
+
+        footer {
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        footer a {
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #0d6efd !important;
+        }
+
+        #themeToggle {
+            border-radius: 50%;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            transition: background 0.3s ease;
+        }
+
+        #themeToggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Flash messages */
+        .alert {
+            border-radius: 10px;
+        }
+
+        /* Dark mode improvements */
+        body.bg-dark {
+            background-color: #121212 !important;
+        }
+
+        body.bg-dark .navbar,
+        body.bg-dark footer {
+            background-color: #1c1c1c !important;
+        }
+
+        body.bg-dark .nav-link {
+            color: #ddd !important;
+        }
+
+        body.bg-dark .nav-link:hover {
+            color: #0d6efd !important;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-primary" href="{{ url_for('main.home') }}">-- TechBlog --</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Left side -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}">📊 Dashboard</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.blogs') }}">📝 Blogs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}">ℹ️ About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.contact') }}">📩 Contact</a></li>
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.dashboard') }}">👨🏻‍🎓 Admin</a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                <!-- Right side -->
+                <!-- Right side -->
+                <!-- Navbar Right Side -->
+                {% if current_user.is_authenticated %}
+                <ul class="navbar-nav ms-auto">
+
+                    <!-- Profile Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="btn btn-outline-light dropdown-toggle mx-2" href="#" role="button"
+                            id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i> Profile
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('main.profile_view', username=current_user.username) }}">View
+                                    Profile</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('main.profile_edit', username=current_user.username) }}">Edit
+                                    Profile</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Create Post Button -->
+                    <li class="nav-item">
+                        <a class="btn btn-success mx-2" href="{{ url_for('main.create_post') }}">
+                            <i class="bi bi-plus-circle"></i> Create Post
+                        </a>
+                    </li>
+
+                </ul>
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                        role="button" data-bs-toggle="dropdown">
+                        <span class="me-2">👤</span> {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li><a class="dropdown-item" href="{{ url_for('main.profile_edit') }}">⚙️ Profile
+                                Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">🚪 Logout</a>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">🔑 Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">🆕 Register</a></li>
+                {% endif %}
+                </ul>
+
+                <!-- Dark mode toggle -->
+                <button class="btn btn-outline-light ms-3" id="themeToggle">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="container my-4" data-aos="fade-up">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-4 mt-5 shadow-lg">
+        <div class="container">
+            <p class="mb-1">© 2025 TechBlog | All rights reserved.</p>
+            <p class="mb-2">
+                <a href="{{ url_for('main.home') }}" class="text-light me-3">Home</a>
+                <a href="{{ url_for('main.blogs') }}" class="text-light me-3">Blogs</a>
+                <a href="{{ url_for('main.contact') }}" class="text-light">Contact</a>
+            </p>
+            <div>
+                <a href="#" class="text-light me-2">🐦 Twitter</a>
+                <a href="#" class="text-light me-2">💻 GitHub</a>
+                <a href="#" class="text-light">📸 Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap & AOS Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+
+        // Dark mode toggle with localStorage (persistent)
+        const themeToggle = document.getElementById("themeToggle");
+        const body = document.body;
+
+        // Load preference
+        if (localStorage.getItem("theme") === "dark") {
+            body.classList.add("bg-dark", "text-light");
+            body.classList.remove("bg-light");
+            themeToggle.textContent = "☀️";
+        }
+
+        themeToggle.addEventListener("click", () => {
+            body.classList.toggle("bg-dark");
+            body.classList.toggle("text-light");
+            body.classList.toggle("bg-light");
+
+            if (body.classList.contains("bg-dark")) {
+                localStorage.setItem("theme", "dark");
+                themeToggle.textContent = "☀️";
+            } else {
+                localStorage.setItem("theme", "light");
+                themeToggle.textContent = "🌙";
+            }
+        });
+    </script>
+
+    <!-- Auto-refresh carousel every hour -->
+    <script>
+        async function fetchTrendingStories() {
+            try {
+                const response = await fetch("/api/trending");
+                const data = await response.json();
+
+                if (data.stories && data.stories.length > 0) {
+                    const carouselInner = document.querySelector("#trendingCarousel .carousel-inner");
+                    carouselInner.innerHTML = "";
+
+                    data.stories.forEach((story, index) => {
+                        const activeClass = index === 0 ? "active" : "";
+                        const item = `
+                <div class="carousel-item ${activeClass}">
+                  <img src="${story.image_url || 'https://via.placeholder.com/800x400?text=Tech+News'}" class="d-block w-100" alt="${story.title}">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>${story.title}</h5>
+                    <p>${story.description || ""}</p>
+                    <a href="${story.url}" target="_blank" class="btn btn-primary">Read more</a>
+                  </div>
+                </div>
+              `;
+                        carouselInner.innerHTML += item;
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching trending stories:", error);
+            }
+        }
+
+        // Fetch new stories when page loads
+        fetchTrendingStories();
+
+        // Refresh stories every 1 hour (3600000 ms)
+        setInterval(fetchTrendingStories, 3600000);
+    </script>
+
+    <script>
+        // Auto-hide flash messages after 3 seconds
+        setTimeout(() => {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                // Add fade-out animation
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+            });
+        }, 3000); // 3000 ms = 3 seconds
+    </script>
+
+
+
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <div class="d-flex align-items-center mb-4">
+            <img src="{{ url_for('static', filename=profile.avatar_filename) if profile.avatar_filename else url_for('static', filename='images/avatar-placeholder.png') }}"
+                class="rounded-circle me-3" width="96" height="96" alt="Avatar">
+            <div>
+                <h2 class="mb-1">{{ user.username }}</h2>
+                <div class="text-muted">
+                    {{ profile.tech_department or "Tech Enthusiast" }}
+                    {% if profile.skills %} • {{ profile.skills }}{% endif %}
+                </div>
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                <a class="btn btn-sm btn-outline-primary mt-2" href="{{ url_for('main.profile_edit') }}">Edit
+                    Profile</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if profile.bio %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">About</h5>
+                <p class="mb-0">{{ profile.bio }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Links</h5>
+                <ul class="list-unstyled mb-0">
+                    {% if profile.website %}<li>🌐 <a href="{{ profile.website }}" target="_blank">{{ profile.website
+                            }}</a></li>{% endif %}
+                    {% if profile.github %}<li>💻 <a href="{{ profile.github }}" target="_blank">{{ profile.github
+                            }}</a></li>{% endif %}
+                    {% if profile.twitter %}<li>🐦 <a href="{{ profile.twitter }}" target="_blank">{{ profile.twitter
+                            }}</a></li>{% endif %}
+                    {% if profile.linkedin %}<li>🔗 <a href="{{ profile.linkedin }}" target="_blank">{{ profile.linkedin
+                            }}</a></li>{% endif %}
+                    {% if not (profile.website or profile.github or profile.twitter or profile.linkedin) %}
+                    <li class="text-muted">No links added yet.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

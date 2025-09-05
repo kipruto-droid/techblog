@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}All Blogs - TechBlog{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">📝 All Blog Posts</h2>
+
+    {% if posts %}
+    {% for post in posts %}
+    <div class="card mb-3 p-3 shadow-sm" data-aos="fade-up">
+        <h3><a href="{{ url_for('main.post_detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+        <p>{{ post.summary }}</p>
+        {% if post.image_url %}
+        <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.title }}" class="img-fluid mb-2">
+        {% endif %}
+        {% if post.video_url %}
+        <video controls class="w-100 mb-2">
+            <source src="{{ url_for('static', filename=post.video_url) }}" type="video/mp4">
+        </video>
+        {% endif %}
+        <small>Category: {{ post.category }} | {{ post.date_posted.strftime('%b %d, %Y') }}</small>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No posts available yet. Stay tuned!</p>
+    {% endif %}
+</div>
+{% endblock %}

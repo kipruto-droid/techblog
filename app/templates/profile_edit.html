@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Profile Card -->
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h3 class="fw-bold mb-4 text-center">Edit Profile</h3>
+
+                    <!-- Flash messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <!-- Profile Form -->
+                    <form method="POST" enctype="multipart/form-data">
+
+                        <!-- Profile Picture Upload -->
+                        <div class="text-center mb-4">
+                            <div class="position-relative d-inline-block">
+                                <img src="{{ url_for('static', filename='uploads/avatars/' ~ profile.avatar_filename) if profile.avatar_filename else url_for('static', filename='images/default-avatar.png') }}"
+                                    alt="Profile Picture" class="rounded-circle shadow"
+                                    style="width: 150px; height: 150px; object-fit: cover;" id="profile-preview">
+                                <label for="avatar"
+                                    class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2 shadow-sm"
+                                    style="cursor: pointer;">
+                                    <i class="bi bi-camera"></i>
+                                </label>
+                            </div>
+                            <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*"
+                                onchange="previewProfile(event)">
+                        </div>
+
+                        <!-- Username (readonly) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Username</label>
+                            <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Bio</label>
+                            <textarea class="form-control" name="bio" rows="3"
+                                placeholder="Tell us about yourself...">{{ profile.bio or '' }}</textarea>
+                        </div>
+
+                        <!-- Tech Department -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tech Department</label>
+                            <input type="text" class="form-control" name="tech_department"
+                                value="{{ profile.tech_department or '' }}"
+                                placeholder="e.g. AI, Cybersecurity, Web Dev">
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Skills</label>
+                            <input type="text" class="form-control" name="skills" value="{{ profile.skills or '' }}"
+                                placeholder="Python, React, Docker...">
+                        </div>
+
+                        <!-- Website -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Personal Website</label>
+                            <input type="url" class="form-control" name="website" value="{{ profile.website or '' }}"
+                                placeholder="https://example.com">
+                        </div>
+
+                        <!-- Social Links -->
+                        <h5 class="fw-bold mt-4">Social Links</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Twitter</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-twitter"></i></span>
+                                    <input type="url" class="form-control" name="twitter"
+                                        value="{{ profile.twitter or '' }}" placeholder="Twitter profile link">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">GitHub</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-github"></i></span>
+                                    <input type="url" class="form-control" name="github"
+                                        value="{{ profile.github or '' }}" placeholder="GitHub profile link">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">LinkedIn</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-linkedin"></i></span>
+                                    <input type="url" class="form-control" name="linkedin"
+                                        value="{{ profile.linkedin or '' }}" placeholder="LinkedIn profile link">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">
+                                <i class="bi bi-save me-2"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview JS -->
+<script>
+    function previewProfile(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById('profile-preview').src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+{% endblock %}

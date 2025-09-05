@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - TechBlog{% endblock %}
+
+{% block content %}
+<div class="post-detail my-4">
+    <h1>{{ post.title }}</h1>
+    <small class="text-muted">
+        Category: {{ post.category }} | {{ post.date_posted.strftime('%b %d, %Y') }}
+    </small>
+
+    {% if post.image_url %}
+    <img src="{{ post.image_url }}" alt="{{ post.title }}" class="img-fluid my-3 post-image">
+    {% endif %}
+
+    {% if post.video_url %}
+    <video controls width="100%">
+        <source src="{{ url_for('static', filename=post.video_url) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    {% endif %}
+
+
+    <p class="mt-3">{{ post.summary }}</p>
+
+    <!-- Somewhere near the title or after content -->
+    <div class="mt-3">
+        <button id="likeBtn" class="btn btn-outline-primary btn-sm">👍 Like</button>
+        <span id="likeCount" class="ms-2">{{ post.likes.count() if post.likes else 0 }}</span>
+    </div>
+
+    {% block extra_js %}
+    <script>
+        document.getElementById("likeBtn")?.addEventListener("click", async () => {
+            try {
+                const res = await fetch("{{ url_for('main.like_post', post_id=post.id) }}", { method: "POST" });
+                const data = await res.json();
+                document.getElementById("likeCount").textContent = data.likes;
+                if (data.status === "liked") {
+                    document.getElementById("likeBtn").classList.remove("btn-outline-primary");
+                    document.getElementById("likeBtn").classList.add("btn-primary");
+                } else {
+                    document.getElementById("likeBtn").classList.add("btn-outline-primary");
+                    document.getElementById("likeBtn").classList.remove("btn-primary");
+                }
+            } catch (e) { console.error(e); }
+        });
+    </script>
+    {% endblock %}
+
+
+    <a href="{{ url_for('main.home') }}" class="btn btn-outline-primary mt-3">← Back to Home</a>
+</div>
+{% endblock %}

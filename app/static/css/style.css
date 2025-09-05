@@ -1,0 +1,144 @@
+body {
+    font-family: 'Segou UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    color: #333;
+}
+
+.hero {
+    background: #1a1a1a;
+    color: #fff;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.hero .btn {
+    background: #4CAF50;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+
+}
+
+.category-bar {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.category-bar a {
+    display: inline-block;
+    margin: 5px 10px;
+    padding: 8px 15px;
+    background: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.category-bar a:hover {
+    background: #4f8a70;
+}
+
+.categories {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.categories h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minimax(200px, 1fr));
+    gap: 20px;
+}
+
+.category {
+    background: #4CAF50;
+    color: #fff;
+    padding: 40px 20px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    transition: transform 0.3s;
+}
+
+.category:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.posts {
+    padding: 50px 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.post {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post h3 {
+    margin-top: 0;
+}
+
+.post-image,
+.post-video {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+.search-form {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.search-form input {
+    padding: 10px;
+    width: 250px;
+    font-weight: 700px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-form button {
+    padding: 10px 15px;
+    border: none;
+    background: #ccc;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.7s;
+}
+
+.post-detail {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
+}
+
+.post-detail h1 {
+    margin-top: 0;
+}

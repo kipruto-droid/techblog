@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}TechBlogAI{% endblock %}
+
+{% block content %}
+
+{% if trending %}
+<div id="trendingCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-inner">
+        {% for story in trending %}
+        <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+            <img src="{{ story.image_url if story.image_url else url_for('static', filename='images/fallback.jpg') }}"
+                class="d-block w-100" alt="{{ story.title }}" style="height: 400px; object-fit: cover;">
+            <div class="carousel-caption d-none d-md-block"
+                style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px; max-height: 180px; overflow-y: auto;">
+                <h5 style="font-size: 1.3rem;">{{ story.title }}</h5>
+                <p style="font-size: 0.9rem;">{{ story.description }}</p>
+                {% if story.source_url %}
+                <a href="{{ story.source_url }}" class="btn btn-sm btn-info mt-2" target="_blank">Read More →</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#trendingCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#trendingCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        {% for story in trending %}
+        <button type="button" data-bs-target="#trendingCarousel" data-bs-slide-to="{{ loop.index0 }}"
+            class="{% if loop.index == 1 %}active{% endif %}" aria-current="true"
+            aria-label="Slide {{ loop.index }}"></button>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<p class="text-center mt-4">No trending stories available yet. Stay tuned!</p>
+{% endif %}
+
+
+
+<!-- Search Form -->
+<form action="{{ url_for('main.search') }}" method="get" class="search-form my-4 text-center">
+    <input type="text" name="q" placeholder="Search posts..." class="form-control d-inline w-50" required>
+    <button type="submit" class="btn btn-dark">🔍</button>
+</form>
+
+<!-- Category Filter Bar -->
+<section class="category-bar d-flex justify-content-center gap-3 my-4">
+    <a href="{{ url_for('main.home') }}" class="btn btn-outline-primary">All</a>
+    <a href="{{ url_for('main.category', category_name='Computing & Hardware') }}" class="btn btn-outline-secondary">🖥️
+        Computing</a>
+    <a href="{{ url_for('main.category', category_name='Artificial Intelligence') }}"
+        class="btn btn-outline-secondary">🤖 AI</a>
+    <a href="{{ url_for('main.category', category_name='Cybersecurity & Hacks') }}" class="btn btn-outline-secondary">🔐
+        Security</a>
+    <a href="{{ url_for('main.category', category_name='Mobile & Gadgets') }}" class="btn btn-outline-secondary">📱
+        Mobile</a>
+    <a href="{{ url_for('main.category', category_name='Tech Innovations') }}" class="btn btn-outline-secondary">🚀
+        Innovation</a>
+    <a href="{{ url_for('main.category', category_name='Videos') }}" class="btn btn-outline-secondary">🎥 Videos</a>
+</section>
+
+<!-- Posts Section -->
+<section class="posts container">
+    <h2 class="mb-4">Latest Tech News</h2>
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 mb-4">
+            <div class="p-3 border rounded shadow-sm h-100">
+                <h3><a href="{{ url_for('main.post_detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+                <p>{{ post.summary }}</p>
+
+                {% if post.image_url %}
+                <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.title }}"
+                    class="img-fluid my-2">
+                {% endif %}
+
+                {% if post.video_url %}
+                <video controls class="w-100 my-2">
+                    <source src="{{ url_for('static', filename=post.video_url) }}" type="video/mp4">
+                </video>
+                {% endif %}
+
+                <small class="text-muted">
+                    Category: {{ post.category }} | {{ post.date_posted.strftime('%b %d, %Y') }}
+                </small>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-center text-muted">No Posts yet. Stay Tuned!</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

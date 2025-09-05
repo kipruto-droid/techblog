@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+                <h3 class="mb-3">Create a New Post</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input class="form-control" name="title" required
+                            placeholder="e.g., NVIDIA unveils new GPU architecture">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Category (optional)</label>
+                        <input class="form-control" name="category" placeholder="AI, Cybersecurity, Game Dev...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Content</label>
+                        <textarea class="form-control" name="content" rows="8" required
+                            placeholder="Write your post..."></textarea>
+                        <div class="form-text">We’ll auto-generate a short summary with the AI agent (when available).
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Image (optional)</label>
+                            <input type="file" class="form-control" name="image" accept="image/*">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Video (optional)</label>
+                            <input type="file" class="form-control" name="video" accept="video/*">
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button class="btn btn-primary" type="submit">Publish</button>
+                        <a class="btn btn-outline-secondary" href="{{ url_for('main.home') }}">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
